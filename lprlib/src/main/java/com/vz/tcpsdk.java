@@ -97,6 +97,8 @@ public class tcpsdk {
 	*  @ingroup group_device
 	*/
    public native int setPlateInfoCallBack( int handle,  OnDataReceiver  onDataReceiver ,int bEnableImage);
+
+
  //  public native int setPlateInfoCallBack( OnDataReceiver  onDataReceiver );
    
    /**

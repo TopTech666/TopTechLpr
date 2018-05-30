@@ -2,7 +2,9 @@ package com.vz;
 
 public class PlateResult
 { 
-	
+
+	public static final String NO_CARNUM = "无";
+
 	public PlateResult() {
 	}
 	

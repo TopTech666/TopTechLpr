@@ -2,7 +2,8 @@ package com.example.cwgj;
 
 import android.app.Application;
 
-import com.ToastUtils;
+import com.cwgj.imgupload.utils.UploadPicManager;
+
 
 /**
  * +----------------------------------------------------------------------
@@ -20,7 +21,7 @@ public class LprApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        ToastUtils.init(this);
+        UploadPicManager.getInstance().initConfig(this);
     }
 
 

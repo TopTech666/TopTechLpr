@@ -1,1 +1,1 @@
-include ':app', ':lprlib'
+include ':app', ':lprlib', ':imgupload', ':ledlib', ':basiclib'

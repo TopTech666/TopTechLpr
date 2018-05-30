@@ -1,14 +1,18 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "com.example.cwgj.toptechvideolpr"
-        minSdkVersion 23
-        targetSdkVersion 26
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        ndk {
+            abiFilters  "armeabi-v7a" , "armeabi"
+        }
+
     }
     buildTypes {
         release {
@@ -20,6 +24,10 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:support-v4:19.1.0'
+    implementation 'com.github.TopTech666:TechXunfeiSDK:1.2.3'
     implementation project(':lprlib')
+    implementation project(':imgupload')
+    implementation project(':ledlib')
+    implementation project(':basiclib')
 }
