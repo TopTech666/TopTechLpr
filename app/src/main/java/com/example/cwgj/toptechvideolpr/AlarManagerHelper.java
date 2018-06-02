@@ -25,7 +25,7 @@ public class AlarManagerHelper {
 
     private static final int ALARM_REPEAT_TIME_ONE_MINITES = 10 * 1000;//10s提醒一次
 
-    private static final int ALARM_REPEAT_TIME_FIVE_MINITES = 2 * 60 * 1000;//5min提醒一次
+    private static final int ALARM_REPEAT_TIME_FIVE_MINITES = 1 * 60 * 1000;//5min提醒一次
 
 
     /***************************************************
@@ -58,6 +58,30 @@ public class AlarManagerHelper {
         }else {
             am.setRepeating(AlarmManager.RTC, System.currentTimeMillis(), ALARM_REPEAT_TIME_FIVE_MINITES, sendIntent);
         }
+    }
+
+    /***************************************************
+     * 方法描述 ： 定时清理图片
+     * 方法名  :  initCleanPicAlarmManager
+     **************************************************/
+    public static  void initCleanPicAlarmManager(Context context) {
+        Intent intent = new Intent();
+        intent.setAction(AlarManagerReceiver.ACTION_ALARMANAGER_CLEAN_NOTIFY);
+        PendingIntent sendIntent = PendingIntent.getBroadcast(context, AlarManagerReceiver.REQUEST_CODE_CLEAN_NOTIFY, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            am.setExact(AlarmManager.RTC, System.currentTimeMillis()+ALARM_REPEAT_TIME_FIVE_MINITES,sendIntent);
+        }else {
+            am.setRepeating(AlarmManager.RTC, System.currentTimeMillis(), ALARM_REPEAT_TIME_FIVE_MINITES, sendIntent);
+        }
+    }
+
+    /**
+     * 取消清理图片的alarm
+     * @param context
+     */
+    public static void cancleCleanPicAlarmManager(Context context) {
+        cancleAlarmManager(context, AlarManagerReceiver.ACTION_ALARMANAGER_CLEAN_NOTIFY,AlarManagerReceiver.REQUEST_CODE_CLEAN_NOTIFY);
     }
 
     /**

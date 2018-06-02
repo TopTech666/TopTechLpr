@@ -25,7 +25,11 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
-        if(Intent.ACTION_BOOT_COMPLETED.equals(action) || START_SELF_APP.equals(action)){
+        if(Intent.ACTION_BOOT_COMPLETED.equals(action)
+                || START_SELF_APP.equals(action)
+                || Intent.ACTION_INSTALL_PACKAGE.equals(action)
+                || Intent.ACTION_PACKAGE_ADDED.equals(action)
+                || Intent.ACTION_PACKAGE_REPLACED.equals(action)){
             Toast.makeText(context, "收到开机广播", Toast.LENGTH_SHORT).show();
             Intent boot =  new Intent(context, MainActivity.class);
             boot.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

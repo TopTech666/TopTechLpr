@@ -1,16 +1,15 @@
+//apply plugin: 'com.android.application'
 apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-
-
     defaultConfig {
+//        applicationId "com.cwgj.imgupload"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
-
 
     }
 
@@ -26,4 +25,16 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 //    implementation 'com.android.support:appcompat-v7:19.+'
+    /*数据库*/
+    implementation 'com.j256.ormlite:ormlite-android:5.0'
+    implementation 'com.j256.ormlite:ormlite-core:5.0'
+
+    /*阿里oos*/
+    compile ("com.aliyun.dpa:oss-android-sdk:latest.release") {
+        exclude module: 'appcompat-v7'
+    }
+
+    debugCompile 'com.amitshekhar.android:debug-db:1.0.0'
+
+
 }

@@ -11,6 +11,11 @@ android {
         versionCode 1
         versionName "1.0"
 
+        ndk {
+            abiFilters  "armeabi-v7a", "armeabi"
+        }
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
 
@@ -25,5 +30,6 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
 //    implementation 'com.android.support:appcompat-v7:19.+'
 }

@@ -1,26 +1,24 @@
 package com.example.cwgj.toptechvideolpr;
 
 import android.app.Activity;
-import android.content.Context;
 import android.hardware.SerialManager;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cwgj.basiclib.UiUtils;
+import com.cwgj.basiclib.CommonUtils;
 import com.cwgj.imgupload.bean.PicBean;
 import com.cwgj.imgupload.oss.OSSConfigParam;
 import com.cwgj.imgupload.oss.OSSUploadHelper;
 import com.cwgj.imgupload.utils.BitmapUtils;
+import com.cwgj.imgupload.utils.FileUtils;
 import com.cwgj.imgupload.utils.UploadPicManager;
 import com.cwgj.ledlib.baseled.LedDriverManager;
-import com.device.DeviceInfo;
-import com.device.DeviceManager;
+import com.device.VideoDeviceInfo;
+import com.device.VideoDeviceManager;
 import com.vz.PlateResult;
 import com.vz.tcpsdk;
 
@@ -35,8 +33,6 @@ public class MainActivity extends Activity implements tcpsdk.OnDataReceiver {
 
     TextView tv_car_num;
 
-    ImageView iv_plate;
-
     EditText et_com;
 
     //
@@ -50,25 +46,24 @@ public class MainActivity extends Activity implements tcpsdk.OnDataReceiver {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         tv_car_num = (TextView) findViewById(R.id.tv_car_num);
-        iv_plate = (ImageView) findViewById(R.id.iv_plate);
         et_com = (EditText) findViewById(R.id.et_com);
         //tcp初始化
         tcpsdk.getInstance().setup();
-        DeviceManager.getInstance().setDevice(new DeviceInfo());
-        DeviceManager.getInstance().setPlateInfoCallBack(this ,true);
+        VideoDeviceManager.getInstance().setDevice(new VideoDeviceInfo());
+        VideoDeviceManager.getInstance().setPlateInfoCallBack(this ,true);
         //图片oss初始化
         initOSS();
         //获取串口操作管理类 ，需要系统签名才能使用，否则无权限奔溃
-//        mSerialManager = (SerialManager)getSystemService("serial");
+        mSerialManager = (SerialManager)getSystemService("serial");
         //讯飞初始化
-        setMaxVolume();
+        CommonUtils.setMaxVolume(this);
         mXunfeiManager = XunfeiManager.getInstance().initTts(this, null);
 
         //打开相机
         findViewById(R.id.btn_open_plate).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(DeviceManager.getInstance().openDevice()){
+                if(VideoDeviceManager.getInstance().openDevice()){
                     Toast.makeText(MainActivity.this, "打开设备成功", Toast.LENGTH_LONG).show();
                     AlarManagerHelper.initCameraConnAlarmManager(MainActivity.this);
                 }
@@ -79,18 +74,11 @@ public class MainActivity extends Activity implements tcpsdk.OnDataReceiver {
         findViewById(R.id.btn_close_plate).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(DeviceManager.getInstance().getopenFlag()){
-                    DeviceManager.getInstance().closeDevice();
+                if(VideoDeviceManager.getInstance().getopenFlag()){
+                    VideoDeviceManager.getInstance().closeDevice();
                     Toast.makeText(MainActivity.this, "关闭设备成功", Toast.LENGTH_LONG).show();
                     AlarManagerHelper.cancleCameraConnAlarmManager(MainActivity.this);
                 }
-            }
-        });
-        //隐藏虚拟按键
-        findViewById(R.id.btn_hide_ui).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UiUtils.setHideBottomNavi(getWindow());
             }
         });
 
@@ -108,21 +96,22 @@ public class MainActivity extends Activity implements tcpsdk.OnDataReceiver {
             public void onClick(View v) {
                 String str = et_com.getText().toString();
                 byte[] bytes = LedDriverManager.getInstance().packTextCommad(4, str);
-                DeviceManager.getInstance().serialSend(0,bytes, bytes.length);
+                VideoDeviceManager.getInstance().serialSend(0,bytes, bytes.length);
             }
         });
 
         findViewById(R.id.btn_restart_sys).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UploadPicManager.getInstance().uploadPicsAsynSilently();
-            }
-        });
+//                UploadPicManager.getInstance().uploadPicsAsynSilently();
+//                mSerialManager.restart_system();
+                long start = System.currentTimeMillis();
+                float percent = FileUtils.getAvailablePercent();
+                long end = System.currentTimeMillis();
 
-        findViewById(R.id.btn_sn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((TextView)findViewById(R.id.tv_sn)).setText("SN:  " + android.os.Build.SERIAL);
+                Log.d(TAG, "sdTotalSize:  "+FileUtils.getSDTotalSize() +"--sdAvailSize:  " +FileUtils.getSDAvailableSize()+"  percent: "+ percent + "   time:  "+ (end - start) );
+
+//                FileUtils.orderByDate(BitmapUtils.ParentPath);
             }
         });
     }
@@ -132,7 +121,7 @@ public class MainActivity extends Activity implements tcpsdk.OnDataReceiver {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        DeviceManager.getInstance().closeDevice();
+        VideoDeviceManager.getInstance().closeDevice();
         //释放资源
         tcpsdk.getInstance().cleanup();
         //
@@ -141,14 +130,6 @@ public class MainActivity extends Activity implements tcpsdk.OnDataReceiver {
         AlarManagerHelper.cancleOSSAlarmManager(MainActivity.this);
     }
 
-    //设置最大音量
-    private void setMaxVolume(){
-        AudioManager mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        //获取最大媒体音量值
-        int max = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        //设置媒体音量为最大值，当然也可以设置媒体音量为其他给定的值
-        mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, max,0);
-    }
 
     private void initOSS(){
         String keyid = "STS.NJ7eUHx7X6TnwaHaxr7ZCxMNM";
@@ -199,7 +180,7 @@ public class MainActivity extends Activity implements tcpsdk.OnDataReceiver {
                         tv_car_num.setText(carNum);
                         try {
                             byte[] result = LedDriverManager.getInstance().packTextCommad(2, carNum);
-                            DeviceManager.getInstance().serialSend(0, result, result.length);
+                            VideoDeviceManager.getInstance().serialSend(0, result, result.length);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

@@ -7,7 +7,7 @@ import android.os.Build;
 import android.util.Log;
 
 import com.cwgj.imgupload.utils.UploadPicManager;
-import com.device.DeviceManager;
+import com.device.VideoDeviceManager;
 import com.example.cwgj.toptechvideolpr.AlarManagerHelper;
 
 
@@ -36,15 +36,20 @@ public class AlarManagerReceiver extends BroadcastReceiver {
     //图片oss code
     public static int REQUEST_CODE_OSS_NOTIFY = 101;
 
+    //图片清理
+    public static String ACTION_ALARMANAGER_CLEAN_NOTIFY = "ACTION_ALARMANAGER_CLEAN_NOTIFY";
+    //图片清理
+    public static int REQUEST_CODE_CLEAN_NOTIFY = 102;
+
     @Override
     public void onReceive(Context context, Intent intent) {
 
         String action = intent.getAction();
 
        if(ACTION_ALARMANAGER_CAMERA_CONNEC_NOTIFY.equals(action)){
-                if(!DeviceManager.getInstance().isConnected()){
+                if(!VideoDeviceManager.getInstance().isConnected()){
                     Log.d(TAG, "相机断开,需要重连");
-                    DeviceManager.getInstance().resetDevice();
+                    VideoDeviceManager.getInstance().resetDevice();
                 }else {
 //                    Log.d(TAG, " 相机已经连接");
                 }
@@ -58,6 +63,14 @@ public class AlarManagerReceiver extends BroadcastReceiver {
             UploadPicManager.getInstance().uploadPicsAsynSilently();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
                 AlarManagerHelper.initOSSAlarmManager(context);
+            }
+        }
+
+        if(ACTION_ALARMANAGER_CLEAN_NOTIFY.equals(action)){
+            //定时清理图片
+            UploadPicManager.getInstance().cleanPic();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+                AlarManagerHelper.initCleanPicAlarmManager(context);
             }
         }
     }

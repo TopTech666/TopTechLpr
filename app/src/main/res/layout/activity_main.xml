@@ -6,13 +6,6 @@
     android:layout_height="match_parent">
 
 
-    <ImageView
-        android:id="@+id/iv_plate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:scaleType="center"/>
-
     <TextView
         android:id="@+id/tv_car_num"
         android:layout_width="wrap_content"
@@ -27,11 +20,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_sn"
-            android:textSize="20sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
 
         <EditText
             android:id="@+id/et_com"
@@ -76,11 +64,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <Button
-            android:id="@+id/btn_hide_ui"
-            android:text="隐藏虚拟按键"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
 
         <Button
             android:id="@+id/btn_tts"
@@ -88,11 +71,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <Button
-            android:id="@+id/btn_sn"
-            android:text="SN"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
 
 
 
