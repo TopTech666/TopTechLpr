@@ -1,6 +1,8 @@
 package com.example.cwgj.toptechvideolpr;
 
 import android.app.Activity;
+import android.graphics.BitmapFactory;
+import android.hardware.SerialManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -38,6 +40,7 @@ public class TestActivity extends Activity implements tcpsdk.OnDataReceiver {
     ImageView iv_big_pic, iv_small_pic;
 
     EditText et_input_ip, et_input_led_line, et_input_led_txt;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +88,7 @@ public class TestActivity extends Activity implements tcpsdk.OnDataReceiver {
             tv_video_state.setText("相机未连接");
             tv_video_state.setTextColor(getResources().getColor(R.color.red));
         }
+
     }
 
     private void showToast(String msg){
@@ -213,18 +217,18 @@ public class TestActivity extends Activity implements tcpsdk.OnDataReceiver {
                         final String smallPath = BitmapUtils.ByteArrayToFile(pImgPlateClip,  System.currentTimeMillis()+"");
 
                         Log.d("xxxxxx压缩图片 ", "可用M: " +FileUtils.getSDAvailableSize()+"  sd可用%："+ FileUtils.getAvailablePercent()+ " big: " + bigPath + "  small: "+ smallPath);
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//
-//                                iv_big_pic.setImageBitmap(BitmapFactory.decodeFile(bigPath));
-//                                iv_small_pic.setImageBitmap(BitmapFactory.decodeFile(smallPath));
-//
-//                                FileUtils.deleteFile(bigPath);
-//                                FileUtils.deleteFile(smallPath);
-//
-//                            }
-//                        });
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                iv_big_pic.setImageBitmap(BitmapFactory.decodeFile(bigPath));
+                                iv_small_pic.setImageBitmap(BitmapFactory.decodeFile(smallPath));
+
+                                FileUtils.deleteFile(bigPath);
+                                FileUtils.deleteFile(smallPath);
+
+                            }
+                        });
 
 
                     }

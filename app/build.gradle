@@ -24,16 +24,16 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:19.+'
+    implementation 'com.android.support:appcompat-v7:26.+'
     implementation 'com.github.TopTech666:TechXunfeiSDK:1.2.3'
-//    implementation ('com.github.TopTech666.TechEMClient:emclientlib:1.1.0'){
-//        exclude group: 'com.android.support'
-//        exclude module: 'appcompat-v7'
-//        exclude module: 'support-annotations'
-//        exclude module: 'alicloud-android-third-push'
-//        exclude module: 'glide'
-//        exclude module: "xiaomi"
-//    }
+    implementation ('com.github.TopTech666.TechEMClient:emclientlib:1.1.1'){
+        exclude group: 'com.android.support'
+        exclude module: 'appcompat-v7'
+        exclude module: 'support-annotations'
+        exclude module: 'alicloud-android-third-push'
+        exclude module: 'glide'
+        exclude module: "xiaomi"
+    }
 
     implementation project(':basiclib')
     implementation project(':videoLprlib')
